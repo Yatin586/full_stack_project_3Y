@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Placement Module - Campus Placement Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen">
+
+  <!-- Top Navbar (Matches home-page layout) -->
+  <nav class="bg-slate-900 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-3">
+        <span class="bg-blue-600 text-white font-bold px-2.5 py-1 rounded text-sm">CP</span>
+        <span class="font-bold text-lg tracking-wide">CampusPlace <span class="text-blue-400 font-normal">| Placement Module</span></span>
+      </div>
+
+      <!-- Simulated Active Student Switcher (For testing Eligibility Logic) -->
+      <div class="flex items-center space-x-3 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+        <label for="studentSwitcher" class="text-xs text-slate-300 font-medium">Simulate Logged-in Student:</label>
+        <select id="studentSwitcher" class="bg-slate-900 text-white text-sm rounded px-2 py-1 border border-slate-600 focus:outline-none">
+          <!-- Populated by JS -->
+        </select>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-6 py-8">
+
+    <!-- Logged-in Student Profile Strip -->
+    <div id="studentProfileBanner" class="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm flex flex-wrap justify-between items-center gap-4">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- Placement Details & Metrics Cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Highest Package</p>
+        <h3 id="statHighest" class="text-2xl font-bold text-blue-600 mt-1">0 LPA</h3>
+        <p class="text-xs text-gray-400 mt-1">2026 Placement Season</p>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Average Package</p>
+        <h3 id="statAverage" class="text-2xl font-bold text-indigo-600 mt-1">0 LPA</h3>
+        <p class="text-xs text-gray-400 mt-1">Across all selected offers</p>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Students Placed</p>
+        <h3 id="statPlaced" class="text-2xl font-bold text-emerald-600 mt-1">0</h3>
+        <p class="text-xs text-gray-400 mt-1">Verified selections</p>
+      </div>
+      <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500">Active Job Drives</p>
+        <h3 id="statDrives" class="text-2xl font-bold text-purple-600 mt-1">0</h3>
+        <p class="text-xs text-gray-400 mt-1">Open for applications</p>
+      </div>
+    </section>
+
+    <!-- Module Navigation Tabs -->
+    <div class="flex border-b border-gray-200 mb-6 space-x-6">
+      <button id="tabOpportunities" onclick="switchTab('opportunities')"
+        class="pb-3 text-sm font-semibold border-b-2 border-blue-600 text-blue-600 transition">
+        Job Opportunities & Eligibility
+      </button>
+      <button id="tabEligibleStudents" onclick="switchTab('eligible')"
+        class="pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition">
+        Eligible Students & Drive Details (Coordinator View)
+      </button>
+      <button id="tabPlacementRecords" onclick="switchTab('records')"
+        class="pb-3 text-sm font-semibold border-b-2 border-transparent text-gray-500 hover:text-gray-700 transition">
+        Past Placement Records
+      </button>
+    </div>
+
+    <!-- TAB 1: JOB OPPORTUNITIES BOARD -->
+    <section id="viewOpportunities">
+      <!-- Filters -->
+      <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm mb-6 flex flex-wrap gap-4 items-center justify-between">
+        <div class="flex flex-wrap gap-3 items-center flex-1">
+          <input type="text" id="searchInput" placeholder="Search company or role..."
+            class="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full sm:w-64 focus:outline-none focus:border-blue-500" />
+
+          <select id="branchFilter" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+            <option value="ALL">All Branches</option>
+            <option value="CSE">CSE</option>
+            <option value="IT">IT</option>
+            <option value="ECE">ECE</option>
+            <option value="EEE">EEE</option>
+            <option value="MECH">MECH</option>
+          </select>
+
+          <label class="flex items-center space-x-2 text-sm text-gray-700 cursor-pointer">
+            <input type="checkbox" id="onlyEligibleCheck" class="rounded text-blue-600 focus:ring-blue-500" />
+            <span>Show only jobs I am eligible for</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Job Cards Grid -->
+      <div id="jobsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- TAB 2: ELIGIBLE STUDENTS & PLACEMENT DETAILS (COORDINATOR VIEW) -->
+    <section id="viewEligible" class="hidden">
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-gray-200 flex flex-wrap justify-between items-center gap-4 bg-gray-50">
+          <div>
+            <h2 class="text-lg font-bold text-gray-800">Drive-Wise Eligible Students</h2>
+            <p class="text-xs text-gray-500">Select a company drive to inspect eligible candidates and application statuses.</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <select id="coordinatorJobSelect" class="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none">
+              <!-- Populated by JS -->
+            </select>
+            <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+              Export CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Selected Drive Criteria Summary -->
+        <div id="driveCriteriaBanner" class="px-5 py-3 bg-blue-50 border-b border-blue-100 text-xs text-blue-900 flex flex-wrap gap-6">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Eligible Students Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-100 text-gray-600 text-xs uppercase tracking-wider border-b">
+                <th class="py-3 px-5">Roll No</th>
+                <th class="py-3 px-5">Student Name</th>
+                <th class="py-3 px-5">Branch</th>
+                <th class="py-3 px-5">CGPA</th>
+                <th class="py-3 px-5">Backlogs</th>
+                <th class="py-3 px-5">Application Status</th>
+                <th class="py-3 px-5">Action</th>
+              </tr>
+            </thead>
+            <tbody id="eligibleStudentsTableBody" class="divide-y divide-gray-200 text-sm">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: PAST PLACEMENT RECORDS -->
+    <section id="viewRecords" class="hidden">
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-gray-200">
+          <h2 class="text-lg font-bold text-gray-800">Confirmed Placement Offers</h2>
+          <p class="text-xs text-gray-500">Students officially selected across campus recruitment drives.</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-100 text-gray-600 text-xs uppercase tracking-wider border-b">
+                <th class="py-3 px-5">Student Name</th>
+                <th class="py-3 px-5">Roll No</th>
+                <th class="py-3 px-5">Branch</th>
+                <th class="py-3 px-5">Company</th>
+                <th class="py-3 px-5">Role</th>
+                <th class="py-3 px-5">Package (LPA)</th>
+              </tr>
+            </thead>
+            <tbody id="placedRecordsBody" class="divide-y divide-gray-200 text-sm">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-lg shadow-lg text-sm font-medium transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+  </div>
+
+  <!-- Application Logic (Mirrors Spring Boot PlacementService & PlacementController) -->
+  <script>
+    // =========================================================================
+    // 1. MOCK DATABASE (Replace fetch calls with your Spring Boot REST APIs)
+    // =========================================================================
+    const students = [
+      { id: 1, rollNo: "22CS101", name: "Aarav Sharma", branch: "CSE", cgpa: 8.9, backlogs: 0, placed: false },
+      { id: 2, rollNo: "22IT104", name: "Priya Nair", branch: "IT", cgpa: 7.6, backlogs: 0, placed: false },
+      { id: 3, rollNo: "22EC112", name: "Rohan Verma", branch: "ECE", cgpa: 6.8, backlogs: 1, placed: false },
+      { id: 4, rollNo: "22CS118", name: "Sneha Kulkarni", branch: "CSE", cgpa: 9.3, backlogs: 0, placed: true },
+      { id: 5, rollNo: "22ME109", name: "Vikram Rao", branch: "MECH", cgpa: 7.4, backlogs: 0, placed: false },
+      { id: 6, rollNo: "22EE115", name: "Ananya Iyer", branch: "EEE", cgpa: 8.1, backlogs: 0, placed: false }
+    ];
+
+    const jobs = [
+      {
+        id: 101,
+        companyName: "Google India",
+        role: "Software Engineer - University Grad",
+        packageLpa: 28.5,
+        minCgpa: 8.5,
+        maxBacklogs: 0,
+        allowedBranches: ["CSE", "IT"],
+        deadline: "2026-12-10",
+        location: "Bengaluru"
+      },
+      {
+        id: 102,
+        companyName: "Infosys",
+        role: "Specialist Programmer",
+        packageLpa: 9.5,
+        minCgpa: 7.0,
+        maxBacklogs: 0,
+        allowedBranches: ["CSE", "IT", "ECE", "EEE"],
+        deadline: "2026-12-05",
+        location: "Pune / Hyderabad"
+      },
+      {
+        id: 103,
+        companyName: "TCS Digital",
+        role: "System Engineer",
+        packageLpa: 7.2,
+        minCgpa: 6.5,
+        maxBacklogs: 1,
+        allowedBranches: ["CSE", "IT", "ECE", "EEE", "MECH"],
+        deadline: "2026-12-15",
+        location: "Chennai / Mumbai"
+      },
+      {
+        id: 104,
+        companyName: "Texas Instruments",
+        role: "Embedded Systems Engineer",
+        packageLpa: 18.0,
+        minCgpa: 7.8,
+        maxBacklogs: 0,
+        allowedBranches: ["ECE", "EEE"],
+        deadline: "2026-12-08",
+        location: "Bengaluru"
+      }
+    ];
+
+    // Tracks Applications (Maps to Spring Boot `Application` entity)
+    let applications = [
+      { id: 1, studentId: 4, jobId: 101, status: "SELECTED" },
+      { id: 2, studentId: 1, jobId: 102, status: "APPLIED" }
+    ];
+
+    let currentStudentId = 1;
+
+    // =========================================================================
+    // 2. ELIGIBILITY ENGINE (Matches PlacementService.isStudentEligible)
+    // =========================================================================
+    function checkEligibility(student, job) {
+      if (student.placed) {
+        return { eligible: false, reason: "Already Placed" };
+      }
+      if (student.cgpa < job.minCgpa) {
+        return { eligible: false, reason: `Requires ${job.minCgpa}+ CGPA` };
+      }
+      if (student.backlogs > job.maxBacklogs) {
+        return { eligible: false, reason: `Max ${job.maxBacklogs} backlog(s) allowed` };
+      }
+      if (!job.allowedBranches.includes(student.branch)) {
+        return { eligible: false, reason: `Not open for ${student.branch}` };
+      }
+      return { eligible: true, reason: "Eligible" };
+    }
+
+    // =========================================================================
+    // 3. UI RENDERING FUNCTIONS
+    // =========================================================================
+    function init() {
+      // Populate Student Switcher
+      const switcher = document.getElementById("studentSwitcher");
+      switcher.innerHTML = students.map(s =>
+        `<option value="${s.id}">${s.name} (${s.branch} | ${s.cgpa} CGPA)</option>`
+      ).join("");
+
+      switcher.addEventListener("change", (e) => {
+        currentStudentId = Number(e.target.value);
+        renderAll();
+      });
+
+      // Populate Coordinator Drive Dropdown
+      const jobSelect = document.getElementById("coordinatorJobSelect");
+      jobSelect.innerHTML = jobs.map(j =>
+        `<option value="${j.id}">${j.companyName} — ${j.role} (${j.packageLpa} LPA)</option>`
+      ).join("");
+
+      jobSelect.addEventListener("change", renderCoordinatorView);
+
+      // Filter Event Listeners
+      document.getElementById("searchInput").addEventListener("input", renderJobs);
+      document.getElementById("branchFilter").addEventListener("change", renderJobs);
+      document.getElementById("onlyEligibleCheck").addEventListener("change", renderJobs);
+
+      renderAll();
+    }
+
+    function renderAll() {
+      renderStudentBanner();
+      renderStats();
+      renderJobs();
+      renderCoordinatorView();
+      renderPlacedRecords();
+    }
+
+    function renderStudentBanner() {
+      const student = students.find(s => s.id === currentStudentId);
+      const banner = document.getElementById("studentProfileBanner");
+      banner.innerHTML = `
+        <div class="flex items-center space-x-4">
+          <div class="h-11 w-11 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-lg">
+            ${student.name.charAt(0)}
+          </div>
+          <div>
+            <h2 class="font-bold text-gray-900">${student.name} <span class="text-xs font-normal text-gray-500">(${student.rollNo})</span></h2>
+            <p class="text-xs text-gray-600">Branch: <strong>${student.branch}</strong> &bull; CGPA: <strong>${student.cgpa}</strong> &bull; Active Backlogs: <strong>${student.backlogs}</strong></p>
+          </div>
+        </div>
+        <div>
+          ${student.placed
+            ? `<span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1.5 rounded-full">Status: Placed</span>`
+            : `<span class="bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1.5 rounded-full">Status: Seeking Placement</span>`
+          }
+        </div>
+      `;
+    }
+
+    function renderStats() {
+      const selectedApps = applications.filter(a => a.status === "SELECTED");
+      const packages = selectedApps.map(a => jobs.find(j => j.id === a.jobId)?.packageLpa || 0);
+
+      const highest = packages.length ? Math.max(...packages) : 0;
+      const avg = packages.length ? (packages.reduce((a, b) => a + b, 0) / packages.length).toFixed(1) : 0;
+
+      document.getElementById("statHighest").textContent = `${highest} LPA`;
+      document.getElementById("statAverage").textContent = `${avg} LPA`;
+      document.getElementById("statPlaced").textContent = selectedApps.length;
+      document.getElementById("statDrives").textContent = jobs.length;
+    }
+
+    function renderJobs() {
+      const student = students.find(s => s.id === currentStudentId);
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const branch = document.getElementById("branchFilter").value;
+      const onlyEligible = document.getElementById("onlyEligibleCheck").checked;
+
+      const filtered = jobs.filter(job => {
+        const matchesSearch = job.companyName.toLowerCase().includes(search) || job.role.toLowerCase().includes(search);
+        const matchesBranch = branch === "ALL" || job.allowedBranches.includes(branch);
+        const { eligible } = checkEligibility(student, job);
+        const matchesElig = !onlyEligible || eligible;
+        return matchesSearch && matchesBranch && matchesElig;
+      });
+
+      const grid = document.getElementById("jobsGrid");
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-10 text-gray-500 bg-white rounded-xl border">No matching job drives found.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(job => {
+        const { eligible, reason } = checkEligibility(student, job);
+        const existingApp = applications.find(a => a.studentId === student.id && a.jobId === job.id);
+
+        let actionBtn = "";
+        if (existingApp) {
+          actionBtn = `<button disabled class="px-4 py-2 rounded-lg text-xs font-semibold bg-emerald-100 text-emerald-800 cursor-default">
+            Applied (${existingApp.status})
+          </button>`;
+        } else if (eligible) {
+          actionBtn = `<button onclick="applyForJob(${job.id})" class="px-4 py-2 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white transition">
+            Apply Now
+          </button>`;
+        } else {
+          actionBtn = `<button disabled class="px-4 py-2 rounded-lg text-xs font-semibold bg-gray-200 text-gray-500 cursor-not-allowed">
+            Not Eligible
+          </button>`;
+        }
+
+        return `
+          <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+            <div>
+              <div class="flex justify-between items-start gap-2">
+                <div>
+                  <h3 class="font-bold text-lg text-gray-900">${job.companyName}</h3>
+                  <p class="text-sm font-medium text-gray-700">${job.role}</p>
+                </div>
+                <span class="bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold px-2.5 py-1 rounded-lg whitespace-nowrap">
+                  ${job.packageLpa} LPA
+                </span>
+              </div>
+
+              <div class="mt-4 space-y-1.5 text-xs text-gray-600">
+                <p><span class="font-semibold text-gray-800">Location:</span> ${job.location}</p>
+                <p><span class="font-semibold text-gray-800">Criteria:</span> Min ${job.minCgpa} CGPA | Max ${job.maxBacklogs} Backlogs</p>
+                <p><span class="font-semibold text-gray-800">Deadline:</span> ${job.deadline}</p>
+              </div>
+
+              <div class="mt-3 flex flex-wrap gap-1.5">
+                ${job.allowedBranches.map(b => `<span class="bg-gray-100 text-gray-700 text-[11px] font-medium px-2 py-0.5 rounded">${b}</span>`).join("")}
+              </div>
+            </div>
+
+            <div class="mt-5 pt-3 border-t border-gray-100 flex justify-between items-center">
+              <span class="text-xs font-semibold px-2.5 py-1 rounded ${eligible ? 'bg-green-100 text-green-800' : 'bg-red-50 text-red-700'}">
+                ${reason}
+              </span>
+              ${actionBtn}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderCoordinatorView() {
+      const selectedJobId = Number(document.getElementById("coordinatorJobSelect").value);
+      const job = jobs.find(j => j.id === selectedJobId);
+
+      // Update Criteria Banner
+      document.getElementById("driveCriteriaBanner").innerHTML = `
+        <span><strong>Company:</strong> ${job.companyName}</span>
+        <span><strong>Package:</strong> ${job.packageLpa} LPA</span>
+        <span><strong>Min CGPA:</strong> ${job.minCgpa}</span>
+        <span><strong>Max Backlogs:</str
