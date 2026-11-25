@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GLA University placement portal: jobs, internships and career support for students and recruiters.">
+    <title>GLA University - Placement & Career Management</title>
+    <style>
+        :root { --navy:#14213d; --blue:#1d3557; --orange:#fca311; --bg:#f5f7fa; --text:#333; --muted:#6b7280; --error:#c0392b; --success:#1e8449; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; scroll-padding-top:70px; }
+        body { font-family:Arial,sans-serif; color:var(--text); background:var(--bg); }
+        a { color:inherit; }
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid var(--orange); outline-offset:2px; }
+        section h2, .block h2 { font-size:30px; color:var(--navy); text-align:center; margin-bottom:8px; }
+        .sub { text-align:center; color:var(--muted); margin-bottom:30px; }
+
+        /* navbar */
+        .navbar { position:sticky; top:0; z-index:100; height:70px; background:#fff; display:flex; align-items:center; gap:30px; padding:0 6%; box-shadow:0 1px 6px rgba(0,0,0,.12); }
+        .logo { color:var(--navy); font-size:24px; font-weight:bold; text-decoration:none; }
+        .logo span { color:var(--orange); }
+        .nav-links { list-style:none; display:flex; gap:26px; margin-right:auto; }
+        .nav-links a { text-decoration:none; font-size:15px; padding-bottom:4px; border-bottom:2px solid transparent; }
+        .nav-links a:hover, .nav-links a.active { color:var(--orange); border-bottom-color:var(--orange); }
+        .nav-actions { display:flex; gap:10px; }
+        .menu-btn { display:none; background:none; border:none; font-size:28px; color:var(--navy); cursor:pointer; margin-left:auto; }
+
+        /* buttons */
+        .btn { display:inline-block; background:var(--orange); color:var(--navy); padding:11px 22px; border:2px solid var(--orange); border-radius:6px; text-decoration:none; font-weight:bold; font-size:15px; cursor:pointer; transition:.2s; }
+        .btn:hover { background:var(--navy); border-color:var(--navy); color:#fff; }
+        .btn-outline { background:transparent; border-color:var(--navy); color:var(--navy); }
+        .btn-small { padding:8px 16px; font-size:14px; }
+
+        /* hero */
+        .hero { background:linear-gradient(135deg,var(--navy),var(--blue)); padding:70px 6%; display:flex; align-items:center; gap:50px; }
+        .hero-left { flex:1; color:#fff; }
+        .hero h1 { font-size:44px; line-height:1.2; margin-bottom:14px; }
+        .hero h1 span { color:var(--orange); }
+        .hero p { color:#dfe3ea; font-size:18px; line-height:1.6; margin-bottom:26px; }
+        .search-box { display:flex; background:#fff; border-radius:8px; overflow:hidden; max-width:620px; }
+        .search-box input { flex:1; min-width:0; border:none; padding:15px; font-size:15px; }
+        .search-box input + input { border-left:1px solid #ddd; }
+        .search-box button { border:none; background:var(--orange); color:var(--navy); font-weight:bold; padding:0 24px; cursor:pointer; font-size:15px; }
+        .popular { margin-top:18px; color:#cfd5df; font-size:14px; }
+        .popular a { display:inline-block; margin:6px 6px 0 0; padding:5px 12px; border:1px solid #6c7a96; border-radius:20px; text-decoration:none; color:#fff; font-size:13px; }
+        .popular a:hover { border-color:var(--orange); color:var(--orange); }
+        .signup-card { background:#fff; width:340px; padding:30px; border-radius:12px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,.25); }
+        .signup-card h3 { color:var(--navy); margin-bottom:6px; }
+        .signup-card .big { font-size:34px; font-weight:bold; color:var(--orange); }
+        .signup-card p { color:var(--muted); font-size:14px; margin-bottom:18px; }
+        .signup-card .btn { display:block; margin-bottom:10px; }
+
+        /* blocks */
+        .block { padding:55px 6%; }
+        .block.white, section.white { background:#fff; }
+        .trending-row { display:flex; gap:18px; overflow-x:auto; padding-bottom:12px; scroll-snap-type:x mandatory; }
+        .trend-card { flex:0 0 280px; height:140px; border-radius:12px; padding:22px; color:#fff; scroll-snap-align:start; display:flex; flex-direction:column; justify-content:flex-end; text-decoration:none; transition:transform .2s; }
+        .trend-card:hover { transform:translateY(-4px); }
+        .trend-card strong { font-size:19px; margin-bottom:4px; }
+        .trend-card small { opacity:.9; }
+        .t1 { background:linear-gradient(135deg,#14213d,#3a506b); } .t2 { background:linear-gradient(135deg,#e07a00,#fca311); color:#14213d; }
+        .t3 { background:linear-gradient(135deg,#1e8449,#52be80); } .t4 { background:linear-gradient(135deg,#6c3483,#a569bd); } .t5 { background:linear-gradient(135deg,#1a5276,#5dade2); }
+        .stats { display:flex; justify-content:center; flex-wrap:wrap; gap:60px; }
+        .stat-number { font-size:38px; font-weight:bold; color:var(--navy); text-align:center; }
+        .stat-label { margin-top:4px; font-size:15px; color:var(--muted); text-align:center; }
+
+        /* opportunities */
+        .tabs { display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
+        .tab { padding:10px 28px; border:2px solid var(--navy); background:#fff; color:var(--navy); border-radius:30px; font-weight:bold; cursor:pointer; font-size:15px; }
+        .tab.active { background:var(--navy); color:#fff; }
+        .chips { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-bottom:30px; }
+        .chip { padding:7px 16px; border:1px solid #c5cad3; background:#fff; border-radius:20px; cursor:pointer; font-size:14px; }
+        .chip.active, .chip:hover { border-color:var(--orange); background:#fff4e0; }
+        .job-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:20px; }
+        .job-card { background:#fff; border:1px solid #e3e6eb; border-radius:10px; padding:22px; display:flex; flex-direction:column; transition:box-shadow .2s; }
+        .job-card:hover { box-shadow:0 6px 18px rgba(0,0,0,.12); }
+        .badge { align-self:flex-start; background:#e8f6ee; color:var(--success); font-size:12px; font-weight:bold; padding:3px 10px; border-radius:12px; margin-bottom:12px; }
+        .job-card h3 { color:var(--navy); font-size:18px; margin-bottom:4px; }
+        .company { color:var(--muted); font-size:14px; margin-bottom:14px; }
+        .meta { font-size:14px; line-height:1.9; margin-bottom:16px; flex:1; }
+        .no-result { text-align:center; color:var(--muted); grid-column:1/-1; padding:30px; }
+
+        /* resume band */
+        .resume { display:flex; align-items:center; gap:50px; max-width:1000px; margin:auto; }
+        .resume > div:first-child { flex:1; }
+        .resume h2 { text-align:left; }
+        .resume ul { list-style:none; margin:18px 0 24px; line-height:2; }
+        .resume li::before { content:"\2713"; color:var(--success); font-weight:bold; margin-right:10px; }
+        .paper { width:230px; height:290px; background:#fff; border:1px solid #ddd; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.15); padding:26px 22px; }
+        .paper i { display:block; height:9px; background:#e3e6eb; border-radius:5px; margin-bottom:12px; }
+        .paper i.dark { background:var(--navy); width:60%; height:14px; margin-bottom:20px; }
+        .paper i.short { width:70%; }
+
+        /* stories */
+        .stories { padding:55px 6%; }
+        .story-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:22px; max-width:1000px; margin:auto; }
+        .story { background:#fff; padding:26px; border-radius:10px; border-top:4px solid var(--orange); box-shadow:0 4px 12px rgba(0,0,0,.08); }
+        .story p { line-height:1.7; font-size:15px; margin-bottom:16px; }
+        .story strong { display:block; color:var(--navy); }
+        .story small { color:var(--muted); }
+
+        /* employer band */
+        .employer { background:var(--navy); color:#fff; padding:45px 6%; display:flex; align-items:center; justify-content:space-between; gap:30px; flex-wrap:wrap; }
+        .employer h2 { color:#fff; text-align:left; margin-bottom:6px; }
+        .employer p { color:#cfd5df; }
+
+        /* register form */
+        .register { padding:60px 6%; background:#fff; }
+        .register form { max-width:480px; margin:25px auto 0; }
+        .form-group { margin-bottom:18px; }
+        .form-group label { display:block; margin-bottom:6px; font-weight:bold; font-size:15px; }
+        .form-group input, .form-group select { width:100%; padding:11px; border:1px solid #bbb; border-radius:5px; font-size:15px; }
+        .form-group.invalid input, .form-group.invalid select { border-color:var(--error); }
+        .error-msg { display:none; margin-top:5px; color:var(--error); font-size:13px; }
+        .form-group.invalid .error-msg { display:block; }
+        .register .btn { width:100%; }
+        .form-status { margin-top:15px; text-align:center; font-weight:bold; color:var(--success); }
+
+        .auth-switch { text-align:center; margin-top:18px; font-size:15px; }
+        .auth-switch a { color:var(--navy); font-weight:bold; }
+
+        /* welcome (after registration) */
+        .welcome { background:var(--navy); color:#fff; text-align:center; padding:70px 8%; }
+        .welcome h1 { font-size:38px; margin-bottom:12px; }
+        .welcome p { color:#e5e5e5; font-size:18px; }
+        .next-steps { padding:55px 8%; text-align:center; }
+        .steps-container { display:flex; justify-content:center; flex-wrap:wrap; gap:25px; margin-top:25px; }
+        .step-card { background:#fff; width:30%; min-width:250px; padding:28px; border-radius:10px; border-top:4px solid var(--orange); box-shadow:0 4px 12px rgba(0,0,0,.1); }
+        .step-card h3 { color:var(--navy); margin-bottom:10px; }
+        .step-card p { line-height:1.6; }
+        .next-steps .btn { margin-top:35px; }
+
+        /* contact + footer */
+        .contact { padding:50px 6%; text-align:center; }
+        .contact p { margin:8px; }
+        footer { background:#0e1730; color:#c9cfdb; padding:45px 6% 20px; }
+        .footer-cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:30px; margin-bottom:30px; }
+        footer h4 { color:#fff; margin-bottom:12px; }
+        footer a { display:block; text-decoration:none; font-size:14px; margin-bottom:8px; }
+        footer a:hover { color:var(--orange); }
+        .copy { text-align:center; border-top:1px solid #26314f; padding-top:18px; font-size:14px; }
+        #topBtn { position:fixed; right:25px; bottom:25px; width:45px; height:45px; border:none; border-radius:50%; background:var(--orange); color:var(--navy); font-size:20px; font-weight:bold; cursor:pointer; display:none; }
+
+        @media (max-width:850px) {
+            .navbar { gap:10px; padding:0 4%; }
+            .menu-btn { display:block; }
+            .nav-actions .btn-outline { display:none; }
+            .nav-links { position:absolute; top:70px; left:0; right:0; flex-direction:column; gap:0; background:#fff; max-height:0; overflow:hidden; transition:max-height .3s; box-shadow:0 6px 8px rgba(0,0,0,.1); }
+            .nav-links.open { max-height:300px; }
+            .nav-links li { padding:14px 5%; border-top:1px solid #eee; }
+            .hero { flex-direction:column; padding:45px 5%; gap:30px; }
+            .hero h1, .welcome h1 { font-size:30px; }
+            .signup-card { width:100%; }
+            .resume { flex-direction:column; }
+            .resume h2 { text-align:center; }
+            .step-card { width:90%; }
+            .search-box { flex-wrap:wrap; }
+            .search-box input { flex:1 1 100%; }
+            .search-box input + input { border-left:none; border-top:1px solid #ddd; }
+            .search-box button { padding:14px; flex:1 1 100%; }
+        }
+        @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } * { transition:none !important; } }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar" id="navbar">
+            <a href="#home" class="logo">GLA<span>Placements</span></a>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#opportunities">Jobs &amp; Internships</a></li>
+                <li><a href="#stories">Success Stories</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="#login" class="btn btn-outline btn-small">Login</a>
+                <a href="#register" class="btn btn-small">Register</a>
+            </div>
+
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-left">
+                <h1>Your campus platform for <span>jobs &amp; internships</span></h1>
+                <p>Discover openings from top recruiters, apply in a few clicks and track your placement journey, all in one place.</p>
+
+                <form class="search-box" id="heroSearch">
+                    <input type="text" id="heroKeyword" placeholder="Skill, role or company" aria-label="Skill, role or company">
+                    <input type="text" id="heroLocation" placeholder="Location" aria-label="Location">
+                    <button type="submit">Search</button>
+                </form>
+
+                <div class="popular">
+                    Popular:
+                    <a href="#opportunities" data-search="web developer">Web Development</a>
+                    <a href="#opportunities" data-search="data">Data Science</a>
+                    <a href="#opportunities" data-search="cyber">Cyber Security</a>
+                    <a href="#opportunities" data-search="design">Design</a>
+                </div>
+            </div>
+
+            <div class="signup-card">
+                <div class="big" id="openCount">0+</div>
+                <h3>Openings on the portal</h3>
+                <p>Create your free account to apply</p>
+                <a href="#register" class="btn">Continue with Email</a>
+                <a href="#register" class="btn btn-outline">Employer sign up</a>
+            </div>
+        </section>
+
+        <div class="block">
+            <h2>Trending now</h2>
+            <p class="sub">What's happening on campus</p>
+            <div class="trending-row">
+                <a href="#opportunities" class="trend-card t1"><strong>Campus Drive Season</strong><small>Top recruiters visiting this month</small></a>
+                <a href="#opportunities" class="trend-card t2"><strong>Internship Sprint</strong><small>Apply to 5+ internships this week</small></a>
+                <a href="#register" class="trend-card t3"><strong>Resume Workshop</strong><small>Free session by the placement cell</small></a>
+                <a href="#register" class="trend-card t4"><strong>Mock Interviews</strong><small>Practice with seniors and alumni</small></a>
+                <a href="#opportunities" class="trend-card t5"><strong>Coding Contest</strong><small>Win prizes and recruiter attention</small></a>
+            </div>
+        </div>
+
+        <!-- numbers come from the database (see loadStats) -->
+        <div class="block white">
+            <div class="stats">
+                <div><div class="stat-number" id="statStudents">0</div><div class="stat-label">Registered students</div></div>
+                <div><div class="stat-number" id="statRecruiters">0</div><div class="stat-label">Recruiters</div></div>
+                <div><div class="stat-number" id="statCoordinators">0</div><div class="stat-label">Placement coordinators</div></div>
+            </div>
+        </div>
+
+        <section id="opportunities" class="block">
+            <h2>What are you looking for today?</h2>
+            <p class="sub">Explore openings shared by our recruiters</p>
+
+            <div class="tabs">
+                <button class="tab active" data-type="job">Fresher Jobs</button>
+                <button class="tab" data-type="internship">Internships</button>
+            </div>
+
+            <div class="chips" id="chips">
+                <button class="chip active" data-tag="all">All</button>
+                <button class="chip" data-tag="wfh">Work from home</button>
+                <button class="chip" data-tag="parttime">Part-time</button>
+                <button class="chip" data-tag="engineering">Engineering</button>
+                <button class="chip" data-tag="design">Design</button>
+                <button class="chip" data-tag="data">Data Science</button>
+                <button class="chip" data-tag="cyber">Cyber Security</button>
+            </div>
+
+            <div class="job-grid" id="jobGrid"></div>
+        </section>
+
+        <div class="block white">
+            <div class="resume">
+                <div>
+                    <h2>No resume? No problem.</h2>
+                    <p>Let us help you create one or improve the one you've got.</p>
+                    <ul>
+                        <li>Easy resume builder</li>
+                        <li>Tips from the placement cell</li>
+                        <li>Made for freshers</li>
+                    </ul>
+                    <a href="#register" class="btn">Build my resume</a>
+                </div>
+                <div class="paper" aria-hidden="true">
+                    <i class="dark"></i><i></i><i class="short"></i><i></i><i></i><i class="short"></i><i></i><i class="short"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- sample stories, replace with real students -->
+        <section id="stories" class="stories">
+            <h2>Placement success stories</h2>
+            <p class="sub">Hear from students who got placed</p>
+            <div class="story-grid">
+                <div class="story"><p>The portal made it easy to find openings that matched my skills. I applied to a few companies and got my first offer.</p><strong>Student Name</strong><small>B.Tech CSE, placed in an IT company</small></div>
+                <div class="story"><p>Mock interviews and the resume tips from the placement team boosted my confidence a lot.</p><strong>Student Name</strong><small>MBA, placed in a finance firm</small></div>
+                <div class="story"><p>I found a paid internship here in my third year, and it later turned into a full-time job offer.</p><strong>Student Name</strong><small>B.Tech IT, internship to job offer</small></div>
+            </div>
+        </section>
+
+        <div class="employer">
+            <div>
+                <h2>Hiring freshers and interns?</h2>
+                <p>Post openings and connect with talented students from our campus.</p>
+            </div>
+            <a href="#register" class="btn">Post an opening</a>
+        </div>
+
+        <section id="login" class="register" hidden>
+            <h2>Login</h2>
+            <p class="sub">Welcome back! Enter your details to continue</p>
+
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" autocomplete="email">
+                    <span class="error-msg">Please enter a valid email address.</span>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" autocomplete="current-password">
+                    <span class="error-msg">Please enter your password.</span>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <p class="form-status" id="loginStatus" role="status"></p>
+            </form>
+            <p class="auth-switch">New here? <a href="#register">Create an account</a></p>
+        </section>
+
+        <section id="register" class="register" hidden>
+            <h2>Create Your Account</h2>
+            <p class="sub">Join as a student, recruiter or placement coordinator</p>
+
+            <form id="registerForm" novalidate>
+                <div class="form-group">
+                    <label for="name">Full name</label>
+                    <input type="text" id="name" name="name" autocomplete="name">
+                    <span class="error-msg">Please enter your full name.</span>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" autocomplete="email">
+                    <span class="error-msg">Please enter a valid email address.</span>
+                </div>
+                <div class="form-group">
+                    <label for="role">I am a</label>
+                    <select id="role" name="role">
+                        <option value="">Select your role</option>
+                        <option value="student">Student</option>
+                        <option value="recruiter">Recruiter / Company</option>
+                        <option value="coordinator">Placement Coordinator</option>
+                    </select>
+                    <span class="error-msg">Please select a role.</span>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" autocomplete="new-password">
+                    <span class="error-msg">Password must be at least 8 characters and include a number.</span>
+                </div>
+                <button type="submit" class="btn">Register</button>
+                <p class="form-status" id="formStatus" role="status"></p>
+            </form>
+            <p class="auth-switch">Already have an account? <a href="#login">Login</a></p>
+        </section>
+
+        <!-- Hidden until the user registers successfully -->
+        <section id="welcome" hidden>
+            <div class="welcome">
+                <h1 id="greeting">Welcome!</h1>
+                <p id="roleText">Your account has been created successfully.</p>
+            </div>
+            <div class="next-steps">
+                <h2>What you can do next</h2>
+                <div class="steps-container" id="steps"></div>
+                <a href="#home" class="btn">Back to home</a>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2>Contact Us</h2>
+            <p>Email: placement@college.edu</p>
+            <p>Phone: +91 98765 43210</p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-cols">
+            <div><h4>For Students</h4><a href="#opportunities">Fresher jobs</a><a href="#opportunities">Internships</a><a href="#register">Create resume</a></div>
+            <div><h4>For Recruiters</h4><a href="#register">Post an opening</a><a href="#register">Campus drives</a><a href="#contact">Contact placement cell</a></div>
+            <div><h4>Quick Links</h4><a href="#home">Home</a><a href="#stories">Success stories</a><a href="#register">Register</a></div>
+            <div><h4>About</h4><a href="#contact">Contact us</a><a href="#home">GLA University</a></div>
+        </div>
+        <p class="copy">&copy; <span id="year">2026</span> College Placement &amp; Career Management System</p>
+    </footer>
+
+    <button id="topBtn" aria-label="Back to top">&uarr;</button>
+
+    <script>
+        // ---------- Element references ----------
+        const navbar = document.getElementById("navbar");
+        const menuBtn = document.getElementById("menuBtn");
+        const navLinks = document.getElementById("navLinks");
+        const links = document.querySelectorAll(".nav-links a");
+        const sections = document.querySelectorAll("main section");
+        const topBtn = document.getElementById("topBtn");
+
+        // ---------- Mobile menu ----------
+        menuBtn.addEventListener("click", function () {
+            const isOpen = navLinks.classList.toggle("open");
+            menuBtn.setAttribute("aria-expanded", isOpen);
+        });
+
+        // close the menu after tapping a link
+        links.forEach(function (link) {
+            link.addEventListener("click", function () {
+                navLinks.classList.remove("open");
+                menuBtn.setAttribute("aria-expanded", "false");
+            });
+        });
+
+        // ---------- Scroll behaviour ----------
+        function handleScroll() {
+            const scrollY = window.scrollY;
+
+            // shadow on navbar + back to top button
+            navbar.classList.toggle("scrolled", scrollY > 10);
+            topBtn.style.display = scrollY > 400 ? "block" : "none";
+
+            // highlight the nav link of the section we are in
+            let current = "home";
+            sections.forEach(function (section) {
+                if (section.hidden) {
+                    return; // hidden sections have no position
+                }
+                if (scrollY >= section.offsetTop - 120) {
+                    current = section.id;
+                }
+            });
+
+            links.forEach(function (link) {
+                link.classList.toggle("active", link.getAttribute("href") === "#" + current);
+            });
+        }
+
+        window.addEventListener("scroll", handleScroll);
+        handleScroll();
+
+        topBtn.addEventListener("click", function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        // ---------- Backend address ----------
+        // if the file is opened by double-click (file://), talk to the local server directly
+                const API = window.location.protocol === "file:" ? "http://localhost:3000" : "";
+
+        // ---------- Counting numbers in the About section ----------
+        function countUp(element, target) {
+            const duration = 1500; // ms
+            const startTime = performance.now();
+
+            function update(now) {
+                const progress = Math.min((now - startTime) / duration, 1);
+                element.textContent = Math.floor(progress * target);
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        // get the real numbers from the database
+        async function loadStats() {
+            try {
+                const response = await fetch(API + "/api/stats");
+                const stats = await response.json();
+
+                countUp(document.getElementById("statStudents"), stats.student);
+                countUp(document.getElementById("statRecruiters"), stats.recruiter);
+                countUp(document.getElementById("statCoordinators"), stats.coordinator);
+            } catch (error) {
+                console.log("Could not load stats:", error);
+            }
+        }
+
+        loadStats();
+
+        // ---------- Welcome section (after registration) ----------
+        // what we show for each role
+        const roleContent = {
+            student: {
+                label: "student",
+                steps: [
+                    ["Complete your profile", "Add your academic details, skills and resume."],
+                    ["Browse opportunities", "Look through available jobs and internships."],
+                    ["Apply", "Apply to the openings that match your skills."]
+                ]
+            },
+            recruiter: {
+                label: "recruiter",
+                steps: [
+                    ["Set up your company", "Add your company details and contact information."],
+                    ["Post openings", "Share job and internship openings with students."],
+                    ["Review applicants", "See who applied and shortlist candidates."]
+                ]
+            },
+            coordinator: {
+                label: "placement coordinator",
+                steps: [
+                    ["Manage companies", "Keep track of the companies visiting the campus."],
+                    ["Monitor students", "See student profiles and application progress."],
+                    ["Track placements", "Keep a record of selections and offers."]
+                ]
+            }
+        };
+
+        function showWelcome(name, role, returning) {
+            const content = roleContent[role] || roleContent.student;
+            const stepsBox = document.getElementById("steps");
+
+            document.getElementById("greeting").textContent =
+                (returning ? "Welcome back, " : "Welcome, ") + name.split(" ")[0] + "!";
+            document.getElementById("roleText").textContent = returning
+                ? "You are logged in as a " + content.label + "."
+                : "Your account has been created as a " + content.label + ".";
+
+            // build the step cards
+            stepsBox.innerHTML = "";
+            content.steps.forEach(function (step) {
+                const card = document.createElement("div");
+                card.className = "step-card";
+
+                const title = document.createElement("h3");
+                title.textContent = step[0];
+
+                const text = document.createElement("p");
+                text.textContent = step[1];
+
+                card.appendChild(title);
+                card.appendChild(text);
+                stepsBox.appendChild(card);
+            });
+
+            // login and register are not needed any more
+            document.getElementById("login").hidden = true;
+            document.getElementById("register").hidden = true;
+
+            // show the section and scroll to it
+            const welcome = document.getElementById("welcome");
+            welcome.hidden = false;
+            welcome.scrollIntoView({ behavior: "smooth" });
+        }
+
+        // ---------- Registration form validation ----------
+        const form = document.getElementById("registerForm");
+        const formStatus = document.getElementById("formStatus");
+
+        const rules = {
+            name: function (value) {
+                return value.trim().length >= 3;
+            },
+            email: function (value) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+            },
+            role: function (value) {
+                return value !== "";
+            },
+            password: function (value) {
+                return value.length >= 8 && /\d/.test(value);
+            }
+        };
+
+        function validateField(field) {
+            const valid = rules[field.name](field.value);
+            field.closest(".form-group").classList.toggle("invalid", !valid);
+            return valid;
+        }
+
+        // check each field when the user leaves it
+        form.querySelectorAll("input, select").forEach(function (field) {
+            field.addEventListener("blur", function () {
+                validateField(field);
+            });
+            field.addEventListener("input", function () {
+                // clear the error as soon as the value becomes valid
+                if (field.closest(".form-group").classList.contains("invalid")) {
+                    validateField(field);
+                }
+            });
+        });
+
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            formStatus.textContent = "";
+            formStatus.style.color = "";
+
+            let allValid = true;
+            form.querySelectorAll("input, select").forEach(function (field) {
+                if (!validateField(field)) {
+                    allValid = false;
+                }
+            });
+
+            if (!allValid) {
+                return;
+            }
+
+            const data = {
+                name: form.name.value.trim(),
+                email: form.email.value.trim(),
+                role: form.role.value,
+                password: form.password.value
+            };
+
+            const submitBtn = form.querySelector("button[type='submit']");
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(API + "/api/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    form.reset();
+                    loadStats(); // refresh the numbers
+                    showWelcome(data.name, data.role);
+                } else {
+                    formStatus.style.color = "#c0392b";
+                    formStatus.textContent = result.message;
+                }
+            } catch (error) {
+                formStatus.style.color = "#c0392b";
+                formStatus.textContent = "Cannot reach the server. Run \"npm start\" in the project folder and try again.";
+            }
+
+            submitBtn.disabled = false;
+        });
+
+        
+        // ---------- Jobs and internships (sample data) ----------
+        // TODO: later load this list from the database with fetch("/api/jobs")
+        const openings = [
+            { type: "job", title: "Junior Web Developer", company: "TechNova Solutions", location: "Noida", pay: "\u20b9 4,00,000 /year", tags: ["engineering"] },
+            { type: "job", title: "Data Analyst", company: "InsightWorks", location: "Work From Home", pay: "\u20b9 4,50,000 /year", tags: ["data", "wfh"] },
+            { type: "job", title: "Security Analyst Trainee", company: "SecureNet Labs", location: "Gurgaon", pay: "\u20b9 5,00,000 /year", tags: ["cyber", "engineering"] },
+            { type: "job", title: "UI/UX Designer", company: "PixelCraft Studio", location: "Delhi", pay: "\u20b9 3,60,000 /year", tags: ["design"] },
+            { type: "job", title: "Software Test Engineer", company: "QualityFirst Tech", location: "Pune", pay: "\u20b9 3,80,000 /year", tags: ["engineering"] },
+            { type: "job", title: "Customer Support Associate", company: "HelpDesk India", location: "Work From Home", pay: "\u20b9 2,80,000 /year", tags: ["wfh", "parttime"] },
+            { type: "internship", title: "Web Development Intern", company: "CodeBridge", location: "Work From Home", pay: "\u20b9 10,000 /month", tags: ["engineering", "wfh"] },
+            { type: "internship", title: "Cyber Security Intern", company: "SecureNet Labs", location: "Delhi", pay: "\u20b9 12,000 /month", tags: ["cyber"] },
+            { type: "internship", title: "Data Science Intern", company: "InsightWorks", location: "Bangalore", pay: "\u20b9 15,000 /month", tags: ["data"] },
+            { type: "internship", title: "Graphic Design Intern", company: "PixelCraft Studio", location: "Work From Home", pay: "\u20b9 8,000 /month", tags: ["design", "wfh", "parttime"] },
+            { type: "internship", title: "Python Developer Intern", company: "TechNova Solutions", location: "Noida", pay: "\u20b9 10,000 /month", tags: ["engineering", "data"] },
+            { type: "internship", title: "Content Writing Intern", company: "WordSmith Media", location: "Work From Home", pay: "Unpaid", tags: ["wfh", "parttime"] }
+        ];
+
+        const jobGrid = document.getElementById("jobGrid");
+        let activeType = "job";
+        let activeTag = "all";
+        let keyword = "";
+        let place = "";
+
+        function renderOpenings() {
+            const list = openings.filter(function (item) {
+                const text = (item.title + " " + item.company).toLowerCase();
+                return item.type === activeType &&
+                    (activeTag === "all" || item.tags.includes(activeTag)) &&
+                    text.includes(keyword) &&
+                    item.location.toLowerCase().includes(place);
+            });
+
+            jobGrid.innerHTML = "";
+
+            if (list.length === 0) {
+                jobGrid.innerHTML = '<p class="no-result">No openings found. Try a different search.</p>';
+                return;
+            }
+
+            list.forEach(function (item) {
+                const card = document.createElement("div");
+                card.className = "job-card";
+                card.innerHTML =
+                    '<span class="badge">Actively hiring</span>' +
+                    "<h3></h3>" +
+                    '<div class="company"></div>' +
+                    '<div class="meta"></div>' +
+                    '<a href="#register" class="btn btn-outline btn-small">Register to apply</a>';
+
+                // textContent keeps any special characters safe
+                card.querySelector("h3").textContent = item.title;
+                card.querySelector(".company").textContent = item.company;
+                card.querySelector(".meta").innerHTML = "";
+                [item.location, item.pay].forEach(function (line) {
+                    const row = document.createElement("div");
+                    row.textContent = line;
+                    card.querySelector(".meta").appendChild(row);
+                });
+                jobGrid.appendChild(card);
+            });
+        }
+
+        // tabs (jobs / internships)
+        document.querySelectorAll(".tab").forEach(function (tab) {
+            tab.addEventListener("click", function () {
+                document.querySelectorAll(".tab").forEach(function (t) { t.classList.remove("active"); });
+                tab.classList.add("active");
+                activeType = tab.dataset.type;
+                renderOpenings();
+            });
+        });
+
+        // filter chips
+        document.querySelectorAll(".chip").forEach(function (chip) {
+            chip.addEventListener("click", function () {
+                document.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("active"); });
+                chip.classList.add("active");
+                activeTag = chip.dataset.tag;
+                renderOpenings();
+            });
+        });
+
+        // search box in the hero
+        document.getElementById("heroSearch").addEventListener("submit", function (event) {
+            event.preventDefault();
+            keyword = document.getElementById("heroKeyword").value.trim().toLowerCase();
+            place = document.getElementById("heroLocation").value.trim().toLowerCase();
+            renderOpenings();
+            document.getElementById("opportunities").scrollIntoView({ behavior: "smooth" });
+        });
+
+        // popular search links
+        document.querySelectorAll("[data-search]").forEach(function (link) {
+            link.addEventListener("click", function () {
+                keyword = link.dataset.search;
+                document.getElementById("heroKeyword").value = keyword;
+                renderOpenings();
+            });
+        });
+
+        document.getElementById("openCount").textContent = openings.length + "+";
+        renderOpenings();
+
+        // ---------- Login / Register views ----------
+        // only one of them is visible at a time
+        const authSections = {
+            login: document.getElementById("login"),
+            register: document.getElementById("register")
+        };
+
+        function showAuth(which, smooth) {
+            Object.keys(authSections).forEach(function (key) {
+                authSections[key].hidden = (key !== which);
+            });
+            authSections[which].scrollIntoView({ behavior: smooth ? "smooth" : "auto" });
+            history.replaceState(null, "", "#" + which);
+        }
+
+        document.querySelectorAll('a[href="#login"], a[href="#register"]').forEach(function (link) {
+            link.addEventListener("click", function (event) {
+                event.preventDefault();
+                showAuth(link.getAttribute("href").slice(1), true);
+            });
+        });
+
+        // open the right view if the page is loaded with #login or #register
+        if (window.location.hash === "#login" || window.location.hash === "#register") {
+            showAuth(window.location.hash.slice(1), false);
+        }
+
+        // ---------- Login form ----------
+        const loginForm = document.getElementById("loginForm");
+        const loginStatus = document.getElementById("loginStatus");
+        const loginEmail = document.getElementById("loginEmail");
+        const loginPassword = document.getElementById("loginPassword");
+
+        function setInvalid(field, invalid) {
+            field.closest(".form-group").classList.toggle("invalid", invalid);
+            return !invalid;
+        }
+
+        loginEmail.addEventListener("input", function () { setInvalid(loginEmail, false); });
+        loginPassword.addEventListener("input", function () { setInvalid(loginPassword, false); });
+
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            loginStatus.textContent = "";
+            loginStatus.style.color = "";
+
+            const emailOk = setInvalid(loginEmail, !rules.email(loginEmail.value));
+            const passOk = setInvalid(loginPassword, loginPassword.value === "");
+            if (!emailOk || !passOk) {
+                return;
+            }
+
+            const submitBtn = loginForm.querySelector("button[type='submit']");
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(API + "/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: loginEmail.value.trim(), password: loginPassword.value })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    loginForm.reset();
+                    showWelcome(result.name, result.role, true);
+                } else {
+                    loginStatus.style.color = "#c0392b";
+                    loginStatus.textContent = result.message;
+                }
+            } catch (error) {
+                loginStatus.style.color = "#c0392b";
+                loginStatus.textContent = "Cannot reach the server. Run \"npm start\" in the project folder and try again.";
+            }
+
+            submitBtn.disabled = false;
+        });
+
+        // ---------- Footer year ----------
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
+</body>
+</html>
