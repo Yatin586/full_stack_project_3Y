@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GLA University placement and career management portal for students and recruiters.">
+    <title>GLA University - Placement & Career Management</title>
+
+    <style>
+        /* ---------- Base ---------- */
+        :root {
+            --navy: #14213d;
+            --orange: #fca311;
+            --light-bg: #f5f7fa;
+            --text: #333;
+            --error: #c0392b;
+            --success: #1e8449;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 70px; /* so headings don't hide behind the navbar */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: var(--text);
+            background-color: var(--light-bg);
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 3px solid var(--orange);
+            outline-offset: 2px;
+        }
+
+        /* ---------- Navbar ---------- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 70px;
+            background-color: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8%;
+            transition: box-shadow 0.3s;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            color: white;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--orange);
+            border-bottom-color: var(--orange);
+        }
+
+        .menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            min-height: 550px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: var(--navy);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 45px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            color: #e5e5e5;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--orange);
+            color: var(--navy);
+            padding: 12px 25px;
+            margin: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background-color: white;
+            color: var(--navy);
+        }
+
+        /* ---------- Section headings ---------- */
+        section h2 {
+            font-size: 32px;
+            color: var(--navy);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* ---------- About + stats ---------- */
+        .about {
+            padding: 70px 10%;
+            text-align: center;
+            background-color: white;
+        }
+
+        .about p {
+            max-width: 850px;
+            margin: auto;
+            line-height: 1.8;
+            font-size: 17px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 50px;
+            margin-top: 45px;
+        }
+
+        .stat-number {
+            font-size: 40px;
+            font-weight: bold;
+            color: var(--navy);
+        }
+
+        .stat-label {
+            margin-top: 5px;
+            font-size: 15px;
+        }
+
+        /* ---------- Features ---------- */
+        .features {
+            padding: 70px 8%;
+        }
+
+        .feature-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-top: 35px;
+        }
+
+        .feature-card {
+            background-color: white;
+            width: 30%;
+            min-width: 250px;
+            padding: 30px;
+            border-radius: 10px;
+            border-top: 4px solid var(--orange);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: var(--navy);
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            line-height: 1.6;
+        }
+
+        /* ---------- Register form ---------- */
+        .register {
+            padding: 70px 10%;
+            background-color: white;
+        }
+
+        .register form {
+            max-width: 480px;
+            margin: 30px auto 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #bbb;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .form-group.invalid input,
+        .form-group.invalid select {
+            border-color: var(--error);
+        }
+
+        .error-msg {
+            display: none;
+            margin-top: 5px;
+            color: var(--error);
+            font-size: 13px;
+        }
+
+        .form-group.invalid .error-msg {
+            display: block;
+        }
+
+        .register .btn {
+            width: 100%;
+            margin: 5px 0 0;
+        }
+
+        .form-status {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--success);
+        }
+
+        /* ---------- Welcome (shown after registration) ---------- */
+        .welcome {
+            background-color: var(--navy);
+            color: white;
+            text-align: center;
+            padding: 80px 10%;
+        }
+
+        .welcome h1 {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .welcome p {
+            color: #e5e5e5;
+            font-size: 18px;
+        }
+
+        .next-steps {
+            padding: 60px 8%;
+            text-align: center;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .step-card {
+            background-color: white;
+            width: 30%;
+            min-width: 250px;
+            padding: 30px;
+            border-radius: 10px;
+            border-top: 4px solid var(--orange);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-card h3 {
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .step-card p {
+            line-height: 1.6;
+        }
+
+        .next-steps .btn {
+            margin-top: 40px;
+        }
+
+        /* ---------- Contact + footer ---------- */
+        .contact {
+            padding: 60px 10%;
+            text-align: center;
+        }
+
+        .contact p {
+            margin: 10px;
+        }
+
+        footer {
+            background-color: var(--navy);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* ---------- Back to top ---------- */
+        #topBtn {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background-color: var(--orange);
+            color: var(--navy);
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 5%;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                gap: 0;
+                background-color: var(--navy);
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+
+            .nav-links.open {
+                max-height: 320px;
+            }
+
+            .nav-links li {
+                padding: 14px 5%;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .hero h1,
+            .welcome h1 {
+                font-size: 32px;
+            }
+
+            .feature-card {
+                width: 90%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            * { transition: none !important; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar" id="navbar">
+            <div class="logo">GLA University</div>
+
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#register">Register</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>College Placement &amp; Career Management System</h1>
+                <p>
+                    Connecting students with career opportunities
+                    and helping them build a successful future.
+                </p>
+                <a href="#register" class="btn">Register Now</a>
+                <a href="#about" class="btn btn-outline">Explore More</a>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <h2>About Our System</h2>
+            <p>
+                The College Placement and Career Management System is a
+                platform designed to make the placement process easier
+                for students, companies, and the college placement team.
+                It helps students find suitable job opportunities and
+                provides companies with a convenient way to connect
+                with talented students.
+            </p>
+
+            <!-- These numbers are loaded from the database (see loadStats in the script) -->
+            <div class="stats">
+                <div>
+                    <div class="stat-number" id="statStudents">0</div>
+                    <div class="stat-label">Registered students</div>
+                </div>
+                <div>
+                    <div class="stat-number" id="statRecruiters">0</div>
+                    <div class="stat-label">Recruiters</div>
+                </div>
+                <div>
+                    <div class="stat-number" id="statCoordinators">0</div>
+                    <div class="stat-label">Placement coordinators</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2>Our Features</h2>
+
+            <div class="feature-container">
+                <div class="feature-card">
+                    <h3>Student Profile</h3>
+                    <p>Students can create and manage their academic and career information.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Job Opportunities</h3>
+                    <p>Students can explore available job and internship opportunities.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Company Management</h3>
+                    <p>Companies can share job openings and placement information.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="register" class="register">
+            <h2>Create Your Account</h2>
+
+            <form id="registerForm" novalidate>
+                <div class="form-group">
+                    <label for="name">Full name</label>
+                    <input type="text" id="name" name="name" autocomplete="name">
+                    <span class="error-msg">Please enter your full name.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" autocomplete="email">
+                    <span class="error-msg">Please enter a valid email address.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">I am a</label>
+                    <select id="role" name="role">
+                        <option value="">Select your role</option>
+                        <option value="student">Student</option>
+                        <option value="recruiter">Recruiter / Company</option>
+                        <option value="coordinator">Placement Coordinator</option>
+                    </select>
+                    <span class="error-msg">Please select a role.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" autocomplete="new-password">
+                    <span class="error-msg">Password must be at least 8 characters and include a number.</span>
+                </div>
+
+                <button type="submit" class="btn">Register</button>
+                <p class="form-status" id="formStatus" role="status"></p>
+            </form>
+        </section>
+
+        <!-- Hidden until the user registers successfully -->
+        <section id="welcome" hidden>
+            <div class="welcome">
+                <h1 id="greeting">Welcome!</h1>
+                <p id="roleText">Your account has been created successfully.</p>
+            </div>
+
+            <div class="next-steps">
+                <h2>What you can do next</h2>
+                <div class="steps-container" id="steps"></div>
+                <a href="#home" class="btn">Back to home</a>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2>Contact Us</h2>
+            <p>Email: placement@college.edu</p>
+            <p>Phone: +91 98765 43210</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year">2026</span> College Placement &amp; Career Management System</p>
+    </footer>
+
+    <button id="topBtn" aria-label="Back to top">&uarr;</button>
+
+    <script>
+        // ---------- Element references ----------
+        const navbar = document.getElementById("navbar");
+        const menuBtn = document.getElementById("menuBtn");
+        const navLinks = document.getElementById("navLinks");
+        const links = document.querySelectorAll(".nav-links a");
+        const sections = document.querySelectorAll("main section");
+        const topBtn = document.getElementById("topBtn");
+
+        // ---------- Mobile menu ----------
+        menuBtn.addEventListener("click", function () {
+            const isOpen = navLinks.classList.toggle("open");
+            menuBtn.setAttribute("aria-expanded", isOpen);
+        });
+
+        // close the menu after tapping a link
+        links.forEach(function (link) {
+            link.addEventListener("click", function () {
+                navLinks.classList.remove("open");
+                menuBtn.setAttribute("aria-expanded", "false");
+            });
+        });
+
+        // ---------- Scroll behaviour ----------
+        function handleScroll() {
+            const scrollY = window.scrollY;
+
+            // shadow on navbar + back to top button
+            navbar.classList.toggle("scrolled", scrollY > 10);
+            topBtn.style.display = scrollY > 400 ? "block" : "none";
+
+            // highlight the nav link of the section we are in
+            let current = "home";
+            sections.forEach(function (section) {
+                if (section.hidden) {
+                    return; // hidden sections have no position
+                }
+                if (scrollY >= section.offsetTop - 120) {
+                    current = section.id;
+                }
+            });
+
+            links.forEach(function (link) {
+                link.classList.toggle("active", link.getAttribute("href") === "#" + current);
+            });
+        }
+
+        window.addEventListener("scroll", handleScroll);
+        handleScroll();
+
+        topBtn.addEventListener("click", function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        // ---------- Backend address ----------
+        // if the file is opened by double-click (file://), talk to the local server directly
+                const API = window.location.protocol === "file:" ? "http://localhost:3000" : "";
+
+        // ---------- Counting numbers in the About section ----------
+        function countUp(element, target) {
+            const duration = 1500; // ms
+            const startTime = performance.now();
+
+            function update(now) {
+                const progress = Math.min((now - startTime) / duration, 1);
+                element.textContent = Math.floor(progress * target);
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        // get the real numbers from the database
+        async function loadStats() {
+            try {
+                const response = await fetch(API + "/api/stats");
+                const stats = await response.json();
+
+                countUp(document.getElementById("statStudents"), stats.student);
+                countUp(document.getElementById("statRecruiters"), stats.recruiter);
+                countUp(document.getElementById("statCoordinators"), stats.coordinator);
+            } catch (error) {
+                console.log("Could not load stats:", error);
+            }
+        }
+
+        loadStats();
+
+        // ---------- Welcome section (after registration) ----------
+        // what we show for each role
+        const roleContent = {
+            student: {
+                label: "student",
+                steps: [
+                    ["Complete your profile", "Add your academic details, skills and resume."],
+                    ["Browse opportunities", "Look through available jobs and internships."],
+                    ["Apply", "Apply to the openings that match your skills."]
+                ]
+            },
+            recruiter: {
+                label: "recruiter",
+                steps: [
+                    ["Set up your company", "Add your company details and contact information."],
+                    ["Post openings", "Share job and internship openings with students."],
+                    ["Review applicants", "See who applied and shortlist candidates."]
+                ]
+            },
+            coordinator: {
+                label: "placement coordinator",
+                steps: [
+                    ["Manage companies", "Keep track of the companies visiting the campus."],
+                    ["Monitor students", "See student profiles and application progress."],
+                    ["Track placements", "Keep a record of selections and offers."]
+                ]
+            }
+        };
+
+        function showWelcome(name, role) {
+            const content = roleContent[role] || roleContent.student;
+            const stepsBox = document.getElementById("steps");
+
+            document.getElementById("greeting").textContent = "Welcome, " + name.split(" ")[0] + "!";
+            document.getElementById("roleText").textContent =
+                "Your account has been created as a " + content.label + ".";
+
+            // build the step cards
+            stepsBox.innerHTML = "";
+            content.steps.forEach(function (step) {
+                const card = document.createElement("div");
+                card.className = "step-card";
+
+                const title = document.createElement("h3");
+                title.textContent = step[0];
+
+                const text = document.createElement("p");
+                text.textContent = step[1];
+
+                card.appendChild(title);
+                card.appendChild(text);
+                stepsBox.appendChild(card);
+            });
+
+            // show the section and scroll to it
+            const welcome = document.getElementById("welcome");
+            welcome.hidden = false;
+            welcome.scrollIntoView({ behavior: "smooth" });
+        }
+
+        // ---------- Registration form validation ----------
+        const form = document.getElementById("registerForm");
+        const formStatus = document.getElementById("formStatus");
+
+        const rules = {
+            name: function (value) {
+                return value.trim().length >= 3;
+            },
+            email: function (value) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+            },
+            role: function (value) {
+                return value !== "";
+            },
+            password: function (value) {
+                return value.length >= 8 && /\d/.test(value);
+            }
+        };
+
+        function validateField(field) {
+            const valid = rules[field.name](field.value);
+            field.closest(".form-group").classList.toggle("invalid", !valid);
+            return valid;
+        }
+
+        // check each field when the user leaves it
+        form.querySelectorAll("input, select").forEach(function (field) {
+            field.addEventListener("blur", function () {
+                validateField(field);
+            });
+            field.addEventListener("input", function () {
+                // clear the error as soon as the value becomes valid
+                if (field.closest(".form-group").classList.contains("invalid")) {
+                    validateField(field);
+                }
+            });
+        });
+
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            formStatus.textContent = "";
+            formStatus.style.color = "";
+
+            let allValid = true;
+            form.querySelectorAll("input, select").forEach(function (field) {
+                if (!validateField(field)) {
+                    allValid = false;
+                }
+            });
+
+            if (!allValid) {
+                return;
+            }
+
+            const data = {
+                name: form.name.value.trim(),
+                email: form.email.value.trim(),
+                role: form.role.value,
+                password: form.password.value
+            };
+
+            const submitBtn = form.querySelector("button[type='submit']");
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(API + "/api/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    form.reset();
+                    loadStats(); // refresh the numbers
+                    showWelcome(data.name, data.role);
+                } else {
+                    formStatus.style.color = "#c0392b";
+                    formStatus.textContent = result.message;
+                }
+            } catch (error) {
+                formStatus.style.color = "#c0392b";
+                formStatus.textContent = "Cannot reach the server. Run \"npm start\" in the project folder and try again.";
+            }
+
+            submitBtn.disabled = false;
+        });
+
+        // ---------- Footer year ----------
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+
+</body>
+</html>
