@@ -281,9 +281,9 @@
             <h2>Placement success stories</h2>
             <p class="sub">Hear from students who got placed</p>
             <div class="story-grid">
-                <div class="story"><p>The portal made it easy to find openings that matched my skills. I applied to a few companies and got my first offer.</p><strong>Student Name</strong><small>B.Tech CSE, placed in an IT company</small></div>
-                <div class="story"><p>Mock interviews and the resume tips from the placement team boosted my confidence a lot.</p><strong>Student Name</strong><small>MBA, placed in a finance firm</small></div>
-                <div class="story"><p>I found a paid internship here in my third year, and it later turned into a full-time job offer.</p><strong>Student Name</strong><small>B.Tech IT, internship to job offer</small></div>
+                <div class="story"><p>The portal made it easy to find openings that matched my skills. I applied to a few companies and got my first offer.</p><strong>Rajesh Singh</strong><small>B.Tech CSE, placed in an IT company</small></div>
+                <div class="story"><p>Mock interviews and the resume tips from the placement team boosted my confidence a lot.</p><strong>Prinka Sharma</strong><small>MBA, placed in a finance firm</small></div>
+                <div class="story"><p>I found a paid internship here in my third year, and it later turned into a full-time job offer.</p><strong>Amit Kumar</strong><small>B.Tech IT, internship to job offer</small></div>
             </div>
         </section>
 
@@ -438,9 +438,84 @@
             window.scrollTo({ top: 0, behavior: "smooth" });
         });
 
-        // ---------- Backend address ----------
-        // if the file is opened by double-click (file://), talk to the local server directly
-                const API = window.location.protocol === "file:" ? "http://localhost:3000" : "";
+        // ---------- Local "database" (browser localStorage) ----------
+        // Users are saved in this browser only, so there is no server or backend needed.
+        const USERS_KEY = "placementUsers";
+
+        let memoryUsers = []; // used only if the browser blocks localStorage
+
+        function getUsers() {
+            try {
+                return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+            } catch (error) {
+                return memoryUsers;
+            }
+        }
+
+        function saveUsers(users) {
+            memoryUsers = users;
+            try {
+                localStorage.setItem(USERS_KEY, JSON.stringify(users));
+            } catch (error) {
+                // storage blocked, the data stays in memory until the page is closed
+            }
+        }
+
+        // turn the password into a hash so the real password is never stored
+        async function hashPassword(password, salt) {
+            const text = salt + password;
+
+            if (window.crypto && window.crypto.subtle) {
+                const bytes = new TextEncoder().encode(text);
+                const buffer = await crypto.subtle.digest("SHA-256", bytes);
+                return Array.from(new Uint8Array(buffer))
+                    .map(function (b) { return b.toString(16).padStart(2, "0"); })
+                    .join("");
+            }
+
+            // simple fallback for very old browsers (not secure, only for demo use)
+            let hash = 0;
+            for (let i = 0; i < text.length; i++) {
+                hash = (hash * 31 + text.charCodeAt(i)) | 0;
+            }
+            return "f" + hash;
+        }
+
+        async function registerUser(data) {
+            const users = getUsers();
+            const email = data.email.toLowerCase();
+
+            if (users.some(function (u) { return u.email === email; })) {
+                return { ok: false, message: "This email is already registered." };
+            }
+
+            const salt = Math.random().toString(36).slice(2);
+            const passwordHash = await hashPassword(data.password, salt);
+
+            users.push({
+                name: data.name,
+                email: email,
+                role: data.role,
+                salt: salt,
+                passwordHash: passwordHash,
+                createdAt: new Date().toISOString()
+            });
+            saveUsers(users);
+
+            return { ok: true };
+        }
+
+        async function loginUser(emailInput, password) {
+            const email = emailInput.trim().toLowerCase();
+            const user = getUsers().find(function (u) { return u.email === email; });
+
+            // same message for wrong email and wrong password
+            if (!user || (await hashPassword(password, user.salt)) !== user.passwordHash) {
+                return { ok: false, message: "Invalid email or password." };
+            }
+
+            return { ok: true, name: user.name, role: user.role };
+        }
 
         // ---------- Counting numbers in the About section ----------
         function countUp(element, target) {
@@ -457,18 +532,17 @@
             requestAnimationFrame(update);
         }
 
-        // get the real numbers from the database
-        async function loadStats() {
-            try {
-                const response = await fetch(API + "/api/stats");
-                const stats = await response.json();
+        // count the saved users by role and show the numbers
+        function loadStats() {
+            const users = getUsers();
 
-                countUp(document.getElementById("statStudents"), stats.student);
-                countUp(document.getElementById("statRecruiters"), stats.recruiter);
-                countUp(document.getElementById("statCoordinators"), stats.coordinator);
-            } catch (error) {
-                console.log("Could not load stats:", error);
+            function countRole(role) {
+                return users.filter(function (u) { return u.role === role; }).length;
             }
+
+            countUp(document.getElementById("statStudents"), countRole("student"));
+            countUp(document.getElementById("statRecruiters"), countRole("recruiter"));
+            countUp(document.getElementById("statCoordinators"), countRole("coordinator"));
         }
 
         loadStats();
@@ -594,42 +668,32 @@
             }
 
             const data = {
-                name: form.name.value.trim(),
-                email: form.email.value.trim(),
-                role: form.role.value,
-                password: form.password.value
+                name: form.elements.name.value.trim(),
+                email: form.elements.email.value.trim(),
+                role: form.elements.role.value,
+                password: form.elements.password.value
             };
 
             const submitBtn = form.querySelector("button[type='submit']");
             submitBtn.disabled = true;
 
-            try {
-                const response = await fetch(API + "/api/register", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data)
-                });
-                const result = await response.json();
+            const result = await registerUser(data);
 
-                if (response.ok) {
-                    form.reset();
-                    loadStats(); // refresh the numbers
-                    showWelcome(data.name, data.role);
-                } else {
-                    formStatus.style.color = "#c0392b";
-                    formStatus.textContent = result.message;
-                }
-            } catch (error) {
+            if (result.ok) {
+                form.reset();
+                loadStats(); // refresh the numbers
+                showWelcome(data.name, data.role);
+            } else {
                 formStatus.style.color = "#c0392b";
-                formStatus.textContent = "Cannot reach the server. Run \"npm start\" in the project folder and try again.";
+                formStatus.textContent = result.message;
             }
 
             submitBtn.disabled = false;
         });
 
-        
+
         // ---------- Jobs and internships (sample data) ----------
-        // TODO: later load this list from the database with fetch("/api/jobs")
+        // you can add or edit openings in this list
         const openings = [
             { type: "job", title: "Junior Web Developer", company: "TechNova Solutions", location: "Noida", pay: "\u20b9 4,00,000 /year", tags: ["engineering"] },
             { type: "job", title: "Data Analyst", company: "InsightWorks", location: "Work From Home", pay: "\u20b9 4,50,000 /year", tags: ["data", "wfh"] },
@@ -786,24 +850,14 @@
             const submitBtn = loginForm.querySelector("button[type='submit']");
             submitBtn.disabled = true;
 
-            try {
-                const response = await fetch(API + "/api/login", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email: loginEmail.value.trim(), password: loginPassword.value })
-                });
-                const result = await response.json();
+            const result = await loginUser(loginEmail.value, loginPassword.value);
 
-                if (response.ok) {
-                    loginForm.reset();
-                    showWelcome(result.name, result.role, true);
-                } else {
-                    loginStatus.style.color = "#c0392b";
-                    loginStatus.textContent = result.message;
-                }
-            } catch (error) {
+            if (result.ok) {
+                loginForm.reset();
+                showWelcome(result.name, result.role, true);
+            } else {
                 loginStatus.style.color = "#c0392b";
-                loginStatus.textContent = "Cannot reach the server. Run \"npm start\" in the project folder and try again.";
+                loginStatus.textContent = result.message;
             }
 
             submitBtn.disabled = false;
