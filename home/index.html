@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="GLA University placement portal: jobs, internships and career support for students and recruiters.">
+<title>GLA University - Placement &amp; Career Management</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+<nav class="navbar" id="navbar" aria-label="Main">
+<a href="#home" class="logo">GLA<span>Placements</span></a>
+<ul class="nav-links" id="navLinks">
+<li><a href="#home">Home</a></li>
+<li><a href="#opportunities">Jobs &amp; Internships</a></li>
+<li><a href="#stories">Success Stories</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+<div class="nav-actions">
+<a href="#login" class="btn btn-outline btn-small">Login</a>
+<a href="#register" class="btn btn-small">Register</a>
+</div>
+<button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button>
+</nav>
+</header>
+
+<main>
+<section id="home" class="hero">
+<div class="wrap">
+<div class="hero-left">
+<h1>Your campus platform for <span>jobs &amp; internships</span></h1>
+<p>Discover openings from top recruiters, apply in a few clicks and track your placement journey, all in one place.</p>
+<form class="search-box" id="heroSearch">
+<input type="text" id="heroKeyword" placeholder="Skill, role or company" aria-label="Skill, role or company">
+<input type="text" id="heroLocation" placeholder="Location" aria-label="Location">
+<button type="submit">Search</button>
+</form>
+<div class="popular">
+Popular:
+<a href="#opportunities" data-search="web developer">Web Development</a>
+<a href="#opportunities" data-search="data">Data Science</a>
+<a href="#opportunities" data-search="cyber">Cyber Security</a>
+<a href="#opportunities" data-search="design">Design</a>
+</div>
+</div>
+<div class="signup-card">
+<div class="big" id="openCount">0+</div>
+<h3>Openings on the portal</h3>
+<p>Create your free account to apply</p>
+<a href="#register" class="btn">Continue with Email</a>
+<a href="#register" class="btn btn-outline">Employer sign up</a>
+</div>
+</div>
+</section>
+
+<div class="block">
+<div class="wrap">
+<h2>Trending now</h2>
+<p class="sub">What's happening on campus</p>
+<div class="trending-row">
+<a href="#opportunities" class="trend-card t1"><strong>Campus Drive Season</strong><small>Top recruiters visiting this month</small></a>
+<a href="#opportunities" class="trend-card t2"><strong>Internship Sprint</strong><small>Apply to 5+ internships this week</small></a>
+<a href="#register" class="trend-card t3"><strong>Resume Workshop</strong><small>Free session by the placement cell</small></a>
+<a href="#register" class="trend-card t4"><strong>Mock Interviews</strong><small>Practice with seniors and alumni</small></a>
+<a href="#opportunities" class="trend-card t5"><strong>Coding Contest</strong><small>Win prizes and recruiter attention</small></a>
+</div>
+</div>
+</div>
+
+<div class="block white">
+<div class="wrap stats">
+<div><div class="stat-number" id="statStudents">0</div><div class="stat-label">Registered students</div></div>
+<div><div class="stat-number" id="statRecruiters">0</div><div class="stat-label">Recruiters</div></div>
+<div><div class="stat-number" id="statCoordinators">0</div><div class="stat-label">Placement coordinators</div></div>
+</div>
+</div>
+
+<section id="opportunities" class="block">
+<div class="wrap">
+<h2>What are you looking for today?</h2>
+<p class="sub">Explore openings shared by our recruiters</p>
+<div class="tabs" role="group" aria-label="Opening type">
+<button class="tab active" data-type="job" aria-pressed="true">Fresher jobs</button>
+<button class="tab" data-type="internship" aria-pressed="false">Internships</button>
+</div>
+<div class="chips" id="chips">
+<button class="chip active" data-tag="all">All</button>
+<button class="chip" data-tag="wfh">Work from home</button>
+<button class="chip" data-tag="parttime">Part-time</button>
+<button class="chip" data-tag="engineering">Engineering</button>
+<button class="chip" data-tag="design">Design</button>
+<button class="chip" data-tag="data">Data science</button>
+<button class="chip" data-tag="cyber">Cyber security</button>
+<button class="chip" data-tag="marketing">Marketing</button>
+<button class="chip" data-tag="finance">Finance</button>
+<button class="chip" data-tag="management">Management</button>
+</div>
+<p class="result-count" id="resultCount" aria-live="polite"></p>
+<div class="job-grid" id="jobGrid" aria-live="polite"></div>
+</div>
+</section>
+
+<div class="block white">
+<div class="resume">
+<div>
+<h2>No resume yet?</h2>
+<p>Create one with the resume builder, or get the placement cell to review yours.</p>
+<ul><li>Easy resume builder</li><li>Tips from the placement cell</li><li>Made for freshers</li></ul>
+<a href="#register" class="btn">Build my resume</a>
+</div>
+<div class="paper" aria-hidden="true"><i class="dark"></i><i></i><i class="short"></i><i></i><i></i><i class="short"></i><i></i><i class="short"></i></div>
+</div>
+</div>
+
+<!-- sample stories, replace with real students -->
+<section id="stories" class="block">
+<div class="wrap">
+<h2>Placement success stories</h2>
+<p class="sub">Students who found their start here</p>
+<div class="story-grid">
+<div class="story"><p>The portal made it easy to find openings that matched my skills. I applied to a few companies and got my first offer.</p><strong>Rajesh Singh</strong><small>B.Tech CSE, placed in an IT company</small></div>
+<div class="story"><p>Mock interviews and resume tips from the placement team boosted my confidence a lot.</p><strong>Prinka Sharma</strong><small>MBA, placed in a finance firm</small></div>
+<div class="story"><p>I found a paid internship here in my third year, and it later turned into a full-time offer.</p><strong>Amit Kumar</strong><small>B.Tech IT, internship to job offer</small></div>
+</div>
+</div>
+</section>
+
+<div class="employer">
+<div class="wrap">
+<div><h2>Hiring freshers or interns?</h2><p>Post an opening and reach students on our campus.</p></div>
+<a href="#register" class="btn">Post an opening</a>
+</div>
+</div>
+
+<section id="login" class="register block white" hidden>
+<div class="wrap">
+<h2>Login</h2>
+<p class="sub">Welcome back. Enter your details to continue.</p>
+<form id="loginForm" novalidate>
+<div class="form-group"><label for="loginEmail">Email</label><input type="email" id="loginEmail" autocomplete="email"><span class="error-msg">Enter a valid email address.</span></div>
+<div class="form-group"><label for="loginPassword">Password</label><input type="password" id="loginPassword" autocomplete="current-password"><span class="error-msg">Enter your password.</span></div>
+<button type="submit" class="btn">Login</button>
+<p class="form-status" id="loginStatus" role="status"></p>
+</form>
+<p class="auth-switch">New here? <a href="#register">Create an account</a></p>
+</div>
+</section>
+
+<section id="register" class="register block white" hidden>
+<div class="wrap">
+<h2>Create your account</h2>
+<p class="sub">Join as a student, recruiter or placement coordinator.</p>
+<form id="registerForm" novalidate>
+<div class="form-group"><label for="name">Full name</label><input type="text" id="name" name="name" autocomplete="name"><span class="error-msg">Enter your full name (at least 3 characters).</span></div>
+<div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email"><span class="error-msg">Enter a valid email address.</span></div>
+<div class="form-group"><label for="role">I am a</label>
+<select id="role" name="role"><option value="">Select your role</option><option value="student">Student</option><option value="recruiter">Recruiter / Company</option><option value="coordinator">Placement Coordinator</option></select>
+<span class="error-msg">Select a role.</span></div>
+<div class="form-group"><label for="password">Password</label><input type="password" id="password" name="password" autocomplete="new-password"><span class="error-msg">Use at least 8 characters, including a number.</span></div>
+<button type="submit" class="btn">Register</button>
+<p class="form-status" id="formStatus" role="status"></p>
+</form>
+<p class="auth-switch">Already have an account? <a href="#login">Login</a></p>
+</div>
+</section>
+
+<section id="welcome" hidden>
+<div class="welcome"><h1 id="greeting">Welcome!</h1><p id="roleText"></p></div>
+<div class="next-steps">
+<h2>What you can do next</h2>
+<div class="steps-container" id="steps"></div>
+<a href="#home" class="btn">Back to home</a>
+</div>
+</section>
+
+<section id="contact" class="contact block">
+<div class="wrap">
+<h2>Contact us</h2>
+<p>Email: <a href="mailto:placement@college.edu">placement@college.edu</a></p>
+<p>Phone: <a href="tel:+919876543210">+91 98765 43210</a></p>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="footer-cols">
+<div><h4>For students</h4><a href="#opportunities">Fresher jobs</a><a href="#opportunities">Internships</a><a href="#register">Create resume</a></div>
+<div><h4>For recruiters</h4><a href="#register">Post an opening</a><a href="#register">Campus drives</a><a href="#contact">Contact placement cell</a></div>
+<div><h4>Quick links</h4><a href="#home">Home</a><a href="#stories">Success stories</a><a href="#register">Register</a></div>
+<div><h4>About</h4><a href="#contact">Contact us</a><a href="#home">GLA University</a></div>
+</div>
+<p class="copy">&copy; <span id="year">2026</span> GLA University Placement &amp; Career Management System</p>
+</footer>
+
+<button id="topBtn" aria-label="Back to top">&uarr;</button>
+
+<script src="script.js"></script>
+</body>
+</html>
